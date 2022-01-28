@@ -1,5 +1,6 @@
 import random
 import MeCab
+import unidic_lite
 import pykakasi
 from alphabet2kana import a2k
 import warnings
