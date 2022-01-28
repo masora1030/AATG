@@ -23,7 +23,7 @@ sniffio==1.2.0
 starlette==0.17.1
 tqdm==4.62.3
 typing-extensions==4.0.1
-unidic==1.1.0
+unidic-lite==1.0.8
 urllib3==1.26.8
 uvicorn==0.17.0
 wasabi==0.9.0
