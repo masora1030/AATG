@@ -7,6 +7,8 @@ import warnings
 import string
 warnings.simplefilter('ignore')
 
+import string
+
 class AATG():
 
   def __init__(self):
@@ -44,10 +46,10 @@ class AATG():
                 'trans':False
             }
             parse_results.append(parse_result)
-    return parse_results 
+    return parse_results
 
 
-  def convert_vowels(self,word):    
+  def convert_vowels(self,word):
     if word[0] in self.suuzi:
       return word
 
@@ -100,7 +102,7 @@ class AATG():
               break
             count += 1
             index2 += 1
-    
+
     return "".join(result)
 
 
@@ -111,6 +113,13 @@ class AATG():
     return wordWithvowel
 
   
+  def alp_check(self,word):
+    for w in word:
+      if w not in  self.alp:
+        return False
+    return True
+
+
   def alp_check(self,word):
     for w in word:
       if w not in  self.alp:
@@ -206,7 +215,7 @@ class AATG():
 
         if len(candidates[word["word"]]) == 0:
           candidates[word["word"]].append(word["surface"])
-        
+
         candidates[word["word"]] = list(set(candidates[word["word"]]))
 
       else:#確率で変換しない単語の時
