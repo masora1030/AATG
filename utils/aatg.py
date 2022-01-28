@@ -48,6 +48,7 @@ class AATG():
                 'trans':False
             }
             parse_results.append(parse_result)
+    print(p)
     return parse_results 
 
 
