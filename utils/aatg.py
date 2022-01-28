@@ -36,14 +36,16 @@ class AATG():
             parse_result = {
                 'surface':nodes[0],
                 'base':nodes[7],
-                'pos':nodes[1]
+                'pos':nodes[1],
+                'trans':False
             }
             parse_results.append(parse_result)
           elif len(nodes) < 9 and nodes[0]!='記号':
             parse_result = {
                 'surface':nodes[0],
                 'base':nodes[0],
-                'pos':nodes[1]
+                'pos':nodes[1],
+                'trans':False
             }
             parse_results.append(parse_result)
     return parse_results 
@@ -106,6 +108,13 @@ class AATG():
     return "".join(result)
 
 
+  def set_trans_prpbably(self,wordWithvowel,prob : float = 0.5):
+    for word in wordWithvowel:
+      if random.random() <= prob:
+        word["trans"] = True
+    return wordWithvowel
+
+
   def make_input_vowels(self,parse_results):
     wordWithvowel= []
     #ローマ字変換
@@ -115,6 +124,7 @@ class AATG():
         result["word"] = word["base"]
         result["vowel"] = self.convert_vowels(word["base"])
         result["surface"] = word["surface"]
+        result["trans"] = word["trans"]
         wordWithvowel.append(result)
    
     #母音のmask
@@ -134,7 +144,7 @@ class AATG():
 
 
   def nGram(self,target, n):
-    return [ target[idx:idx + n] for idx in range(len(target) - n + 1)]
+    return [target[idx:idx + n] for idx in range(len(target) - n + 1)]
 
 
   def serch_ero_word(self,word,candidates):
@@ -171,28 +181,31 @@ class AATG():
     return candidates
 
 
-  def make_candidates(self,wordWithvowel,ngram_num = 3):
+  def make_candidates(self,wordWithvowel,ngram_num: int = 3):
     candidates = {}
     for word in wordWithvowel:#一つの単語に対して
-      candidates = self.serch_ero_word(word,candidates)
-      #n-gram処理
-      if len(candidates[word["word"]]) == 0:
-        n_grams = self.nGram(word["word"], ngram_num)
-        for n_gram in n_grams:
-          ng_vowel = self.convert_vowels(n_gram)
-          candidates = self.serch_ero_word({"word":n_gram,"vowel":ng_vowel,"vowels":[ng_vowel]},candidates)
-          if len(candidates[n_gram]) != 0:
-            random_choice = random.choice(candidates[n_gram])
-            tmp = word["word"]
-            tmp = tmp.replace(n_gram,random_choice,1)
-            candidates[word["word"]].append(tmp)
-          del candidates[n_gram]
+      if word["trans"] == True:#確率で変換する単語の時
+        candidates = self.serch_ero_word(word,candidates)
+        #n-gram処理
+        if len(candidates[word["word"]]) == 0:
+          n_grams = self.nGram(word["word"], ngram_num)
+          for n_gram in n_grams:
+            ng_vowel = self.convert_vowels(n_gram)
+            candidates = self.serch_ero_word({"word":n_gram,"vowel":ng_vowel,"vowels":[ng_vowel]},candidates)
+            if len(candidates[n_gram]) != 0:
+              random_choice = random.choice(candidates[n_gram])
+              tmp = word["word"]
+              tmp = tmp.replace(n_gram,random_choice,1)
+              candidates[word["word"]].append(tmp)
+            del candidates[n_gram]
 
-      if len(candidates[word["word"]]) == 0:
-        candidates[word["word"]].append(word["surface"])
-    
-    for name in candidates:
-      candidates[name] = list(set(candidates[name]))
+        if len(candidates[word["word"]]) == 0:
+          candidates[word["word"]].append(word["surface"])
+        
+        candidates[word["word"]] = list(set(candidates[word["word"]]))
+
+      else:#確率で変換しない単語の時
+        candidates[word["word"]] = [word["surface"]]
 
     return candidates
 
@@ -205,9 +218,12 @@ class AATG():
         output += word["surface"]
     return output
 
-  def generate_title(self,user_input,ngram_num = 3):
+  def generate_title(self,user_input,ngram_numint = 3,prob : float = 0.5):
+
     parse_results = self.mecab_parse(user_input)
     wordWithvowel = self.make_input_vowels(parse_results)
+    wordWithvowel = self.set_trans_prpbably(wordWithvowel,prob)
     candidates = self.make_candidates(wordWithvowel)
     output = self.converted_output(parse_results,candidates)
+
     return output

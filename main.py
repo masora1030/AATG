@@ -1,42 +1,26 @@
-from fastapi import FastAPI, HTTPException
-from utils.aatg import AATG
-
+from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
-from pydantic import BaseModel
-
-# pydantic model
-class TitleIn(BaseModel):
-    original_title: str
-
-class TitleOut(TitleIn):
-    av_title: str
+from utils.aatg import AATG
 
 app = FastAPI()
 aatg = AATG()
 
-@app.get("/", response_class=HTMLResponse)
-async def open_homepage():
-    html_content = '''
-    <html>
-        <head>
-            <title>Hi Guys!</title>
-        </head>
-        <body>
-            <h1>We have a gift for you!</h1>
-        </body>
-    </html>
-    '''
-    return HTMLResponse(content=html_content, status_code=200)
+templates = Jinja2Templates(directory="")
 
-@app.post("/predict", response_model=TitleOut, status_code=200)
-def get_prediction(payload: TitleIn, ngram_num=3):
-    original_title = payload.original_title
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/predict", response_class=HTMLResponse)
+def get_prediction(request: Request, original_title: str = Form(...), ero_level: int = Form(...), ngram_num: int = 3):
 
     try:
-        av_title = aatg.generate_title(original_title, ngram_num)
+        av_title = aatg.generate_title(original_title, ngram_num, float(ero_level) / 100)
     except:
         raise HTTPException(status_code=400, detail="Can not generate AV")
 
-    response_object = {"original_title": original_title, "av_title": av_title}
-    return response_object
+    tweet_url = f"https://twitter.com/share?text={original_title}%0a↓%0a↓%0a↓%0a{av_title}%0a%23AutoAvTitleGenerator%0a&count=none&lang=ja"
+    context = {"request": request, "original_title": original_title, "av_title": av_title, "tweet_url": tweet_url}
+    return templates.TemplateResponse("result.html", context)
