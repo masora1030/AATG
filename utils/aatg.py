@@ -35,7 +35,7 @@ class AATG():
           if nodes[0]!='記号':
             parse_result = {
                 'surface':nodes[0],
-                'base':nodes[1],
+                'base':nodes[0],
                 'pos':nodes[4].split("-")[0],
                 'trans':False
             }
