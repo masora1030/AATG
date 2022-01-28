@@ -104,7 +104,7 @@ class AATG():
               break
             count += 1
             index2 += 1
-    
+
     return "".join(result)
 
 
