@@ -6,7 +6,7 @@
         <h1>AATG</h1>
         <form action="/predict" method="POST">
             <label>作品名を入力</label><br>
-            <input type="text" name="original_title" maxlength="30" placeholder="30文字以内で入力">
+            <input type="text" name="original_title" minlength=1 maxlength=32 placeholder="32文字以内で入力" required />
             <br>
             <label>エロ度</label>
             0 <input type="range" name="ero_level" min="0" max="100"> 100
