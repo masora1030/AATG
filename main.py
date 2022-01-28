@@ -1,3 +1,5 @@
+import subprocess
+subprocess.run('python -m unidic download')
 from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
