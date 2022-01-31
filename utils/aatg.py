@@ -5,15 +5,14 @@ import pykakasi
 from alphabet2kana import a2k
 import warnings
 warnings.simplefilter('ignore')
-
 import string
 
 class AATG():
 
   def __init__(self):
     #kakasiの初期設定
-    kakasi = pykakasi.kakasi() 
-    kakasi.setMode('H', 'a') 
+    kakasi = pykakasi.kakasi()
+    kakasi.setMode('H', 'a')
     kakasi.setMode('K', 'a')
     kakasi.setMode('J', 'a')
 
@@ -44,7 +43,7 @@ class AATG():
     return
       parse_results : mecab解析結果
         surface -> 元々の表現
-        base -> parseされた表現(lite surfaceと同じ)
+        base -> parseされた表現(lite->surfaceと同じ)
         pos -> 品詞
         trans -> 確率で変換するか否か
 
@@ -64,22 +63,22 @@ class AATG():
                 'trans':False
             }
             parse_results.append(parse_result)
-    return parse_results 
+    return parse_results
 
 
   def convert_vowels(self,word):
     """
     ローマ字->母音のみを抽出する構文解析器
-    ルール 
+    ルール
       1 : 数字の場合変換せずそのままreturn
       2 : 母音の時はそのまま
       3 : nの時は
-        文頭 -> 次の文字が母音(ナ行)の時 <かつ>　次の文字がy(なゃ行)の時以外は追加
-        文中 -> 一個前が母音 <かつ>　次の文字が母音(ナ行)の時　<かつ.　次の文字がy(なゃ行)の時以外は追加
+        文頭 -> 次の文字が母音(ナ行)の時 <かつ> 次の文字がy(なゃ行)の時以外は追加
+        文中 -> 一個前が母音 <かつ> 次の文字が母音(ナ行)の時 <かつ> 次の文字がy(なゃ行)の時以外は追加
         文末 -> 「ん」のため追加
       4 : ch sh は「ち」「し」に変換されるため無視
       5 : 子音の次が (c)h , (h)h , y以外は「っ」系と判断
-    """    
+    """
     if word[0] in self.suuzi:
       return word
 
@@ -156,7 +155,7 @@ class AATG():
 
   def make_input_vowels(self,parse_results):
     """
-    母音に変換+ 母音の中の一文字だけ他の母音(+t,n)に置き換え
+    母音に変換 + 母音の中の一文字だけ他の母音(+t,n)に置き換え
     """
     wordWithvowel= []
     #ローマ字変換
@@ -204,7 +203,7 @@ class AATG():
     candidates[word["word"]] = []
 
     #完全一致があるかどうか
-    for ero_key in self.vowel2Ingo:  
+    for ero_key in self.vowel2Ingo:
       if word["vowel"] == ero_key:
         for ero in self.vowel2Ingo[ero_key]:
           candidates[word["word"]].append(ero)
@@ -235,9 +234,9 @@ class AATG():
     return candidates
 
 
-  def make_candidates(self,wordWithvowel,ngram_num: int):
+  def make_candidates(self,wordWithvowel):
     """
-    生成した母音群が辞書に存在するかの判定 + ngramの母音変換
+    生成した母音群が辞書に存在するかの判定 + ngramの母音変換 + ngram候補探索
     """
     candidates = {}
     #一つの単語に対して
@@ -247,8 +246,8 @@ class AATG():
         candidates = self.serch_ero_word(word,candidates)
         #n-gram処理
         if len(candidates[word["word"]]) == 0:
-          #ngramの生成
-          n_grams = self.nGram(word["word"], ngram_num)
+          #ngramの生成 (n = 3)
+          n_grams = self.nGram(word["word"], 3)
           for n_gram in n_grams:
             #n_gramの母音変換
             ng_vowel = self.convert_vowels(n_gram)
@@ -257,7 +256,27 @@ class AATG():
             if len(candidates[n_gram]) != 0:
               #n_gramに対する単語候補に出てきた場合
               #候補の中の一つを取り出して元々の単語に置き換え
-              #(例) : 北海道 -> 北海(n = 2) -> おっぱい　-> おっぱい道
+              #(例) : 北海道 -> 北海(n = 2) -> おっぱい -> おっぱい道
+              random_choice = random.choice(candidates[n_gram])
+              tmp = word["word"]
+              tmp = tmp.replace(n_gram,random_choice,1)
+              candidates[word["word"]].append(tmp)
+            #ngramのkeyを削除
+            if n_gram != word["word"]:
+              del candidates[n_gram]
+
+        if len(candidates[word["word"]]) == 0:
+          #ngramの生成 (n = 2)
+          n_grams = self.nGram(word["word"], 2)
+          for n_gram in n_grams:
+            #n_gramの母音変換
+            ng_vowel = self.convert_vowels(n_gram)
+            #1つのngramに対して辞書内を探索
+            candidates = self.serch_ero_word({"word":n_gram,"vowel":ng_vowel,"vowels":[ng_vowel]},candidates)
+            if len(candidates[n_gram]) != 0:
+              #n_gramに対する単語候補に出てきた場合
+              #候補の中の一つを取り出して元々の単語に置き換え
+              #(例) : 北海道 -> 北海(n = 2) -> おっぱい -> おっぱい道
               random_choice = random.choice(candidates[n_gram])
               tmp = word["word"]
               tmp = tmp.replace(n_gram,random_choice,1)
@@ -291,7 +310,7 @@ class AATG():
         output += word["surface"]
     return output
 
-  def generate_title(self,user_input,ngram_num:int,prob : float = 0.5):
+  def generate_title(self,user_input,prob : float = 0.5):
 
     parse_results = self.mecab_parse(user_input)
     #print(parse_results)
@@ -299,7 +318,7 @@ class AATG():
     #print(wordWithvowel)
     wordWithvowel = self.set_trans_prpbably(wordWithvowel,prob)
     #print(wordWithvowel)
-    candidates = self.make_candidates(wordWithvowel,ngram_num)
+    candidates = self.make_candidates(wordWithvowel)
     #print(candidates)
     output = self.converted_output(parse_results,candidates)
     #print(output)
