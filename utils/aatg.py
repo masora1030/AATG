@@ -48,6 +48,7 @@ class AATG():
         trans -> 確率で変換するか否か
 
     """
+    user_input = user_input.replace('・',' ')
     p = self.mecab.parse(user_input)
     parse_results = []
     p = p.replace('\t',',')
@@ -313,14 +314,14 @@ class AATG():
   def generate_title(self,user_input,prob : float = 0.5):
 
     parse_results = self.mecab_parse(user_input)
-    #print(parse_results)
+    #print(f"parse_results : {parse_results}")
     wordWithvowel = self.make_input_vowels(parse_results)
-    #print(wordWithvowel)
+    #print(f"wordWithvowel : {wordWithvowel}"")
     wordWithvowel = self.set_trans_prpbably(wordWithvowel,prob)
-    #print(wordWithvowel)
+    #print(f"wordWithvowel : {wordWithvowel}"")
     candidates = self.make_candidates(wordWithvowel)
-    #print(candidates)
+    #print(f"candidates : {candidates}")
     output = self.converted_output(parse_results,candidates)
-    #print(output)
+    #print(f"output : {output}")
 
     return output
