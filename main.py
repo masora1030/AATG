@@ -14,10 +14,10 @@ def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/predict", response_class=HTMLResponse)
-def get_prediction(request: Request, original_title: str = Form(...), ero_level: int = Form(...), ngram_num: int = 3):
+def get_prediction(request: Request, original_title: str = Form(...), ero_level: int = Form(...)):
 
     try:
-        av_title = aatg.generate_title(original_title, ngram_num, float(ero_level) / 100)
+        av_title = aatg.generate_title(original_title,float(ero_level) / 100)
     except:
         raise HTTPException(status_code=400, detail="Can not generate AV")
 
