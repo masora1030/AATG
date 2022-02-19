@@ -8,15 +8,17 @@
         <title>AATG</title>
     </head>
     <body>
-        <img src="/static/images/facebook_cover_photo_2.png">
-        <form action="/predict" method="POST">
-            <label>作品名を入力</label><br>
-            <input type="text" name="original_title" minlength=1 maxlength=32 placeholder="32文字以内で入力" required />
-            <br>
-            <label>エロ度</label>
-            0 <input type="range" name="ero_level" min="0" max="100"> 100
-            <br>
-            <input type="submit" value="送信">
-        </form>
+        <center>
+            <img src="/static/images/facebook_cover_photo_2.png" width="25%" height="25%">
+            <form action="/predict" method="POST">
+                <label>作品名を入力</label><br>
+                <input type="text" name="original_title" minlength=1 maxlength=32 placeholder="32文字以内で入力" required />
+                <br>
+                <label>エロ度</label>
+                0 <input type="range" name="ero_level" min="0" max="100"> 100
+                <br>
+                <input type="submit" value="送信">
+            </form>
+        </center>
     </body>
 </html>

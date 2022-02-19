@@ -8,15 +8,17 @@
         <title>AATG</title>
     </head>
     <body>
-        <img src="/static/images/facebook_cover_photo_2.png">
-        <dl>
-            <dt>元の名前</dt>
-            <dd>{{ original_title }}</dd>
-            <dt>AVの名前</dt>
-            <dd>{{ av_title }}</dd>
-        </dl>
-        <button type="button" onclick="history.back()">もう一度変換</button>
-        <a href={{ tweet_url }} class="twitter-share-button" data-show-count="false">Tweet</a>
-        <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+        <center>
+            <img src="/static/images/facebook_cover_photo_2.png" width="25%" height="25%">
+            <dl>
+                <dt>元の名前</dt>
+                <dd>{{ original_title }}</dd>
+                <dt>AVの名前</dt>
+                <dd>{{ av_title }}</dd>
+            </dl>
+            <button type="button" onclick="history.back()">もう一度変換</button>
+            <a href={{ tweet_url }} class="twitter-share-button" data-show-count="false">Tweet</a>
+            <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+        </center>
     </body>
 </html>
