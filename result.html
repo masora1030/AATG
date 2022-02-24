@@ -5,20 +5,31 @@
         <link id="favicon" rel="icon" type="image/x-icon" href="static/images/favicon.ico">
         <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
         <link rel="apple-touch-icon" href="static/images/favicon.png" sizes="180x180">
+        <link rel="stylesheet" href="static/css/style.css">
         <title>AATG</title>
     </head>
     <body>
-        <center>
-            <img src="/static/images/facebook_cover_photo_2.png" width="25%" height="25%">
-            <dl>
-                <dt>元の名前</dt>
-                <dd>{{ original_title }}</dd>
-                <dt>AVの名前</dt>
-                <dd>{{ av_title }}</dd>
-            </dl>
-            <button type="button" onclick="history.back()">もう一度変換</button>
-            <a href={{ tweet_url }} class="twitter-share-button" data-show-count="false">Tweet</a>
-            <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
-        </center>
+        <section class="wrapper">
+            <div class="container">
+                <div class="content">
+                    <div class="content-item">
+                        <img src="static/images/facebook_profile_image.png" class="image">
+                    </div>    
+                    <div class="content-item">
+                        <div class="text">
+                            <dl>
+                                <dt>元の名前</dt>
+                                <dd>{{ original_title }}</dd>
+                                <dt>AVの名前</dt>
+                                <dd>{{ av_title }}</dd>
+                            </dl>
+                            <button type="button" onclick="history.back()">もう一度変換</button>
+                            <a href={{ tweet_url }} class="twitter-share-button" data-show-count="false">Tweet</a>
+                            <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
 </html>

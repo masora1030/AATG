@@ -5,20 +5,30 @@
         <link id="favicon" rel="icon" type="image/x-icon" href="static/images/favicon.ico">
         <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
         <link rel="apple-touch-icon" href="static/images/favicon.png" sizes="180x180">
+        <link rel="stylesheet" href="static/css/style.css">
         <title>AATG</title>
     </head>
     <body>
-        <center>
-            <img src="/static/images/facebook_cover_photo_2.png" width="25%" height="25%">
-            <form action="/predict" method="POST">
-                <label>作品名を入力</label><br>
-                <input type="text" name="original_title" minlength=1 maxlength=32 placeholder="32文字以内で入力" required />
-                <br>
-                <label>エロ度</label>
-                0 <input type="range" name="ero_level" min="0" max="100"> 100
-                <br>
-                <input type="submit" value="送信">
-            </form>
-        </center>
+        <section class="wrapper">
+            <div class="container">
+                <div class="content">
+                    <div class="content-item">
+                        <img src="static/images/facebook_profile_image.png" class="image">
+                    </div>    
+                    <div class="content-item">
+                        <div class="form">
+                            <form action="/predict" method="POST">
+                                <h2 class="heading">作品名を入力</h2>
+                                <input type="text" name="original_title" minlength=1 maxlength=32 placeholder="32文字以内で入力" required />
+                                <h2 class="heading">エロ度</h2>
+                                0 <input type="range" name="ero_level" min="0" max="100"> 100
+                                <br><br>
+                                <input type="submit" value="送信">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
 </html>
