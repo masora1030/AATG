@@ -24,6 +24,8 @@ def get_prediction(request: Request, original_title: str = Form(...), ero_level:
     except:
         raise HTTPException(status_code=400, detail="Can not generate AV")
 
+    original_title.replace(' ', '　')
+
     tweet_url = f"https://twitter.com/share?text={original_title}%0a↓%0a↓%0a↓%0a{av_title}%0a%23AutoAvTitleGenerator%0ahttps://aatgavlove.herokuapp.com%0a&count=none&lang=ja"
     context = {"request": request, "original_title": original_title, "av_title": av_title, "tweet_url": tweet_url}
     return templates.TemplateResponse("result.html", context)
