@@ -18,14 +18,14 @@
                     <div class="content-item">
                         <div class="text">
                             <dl>
+                                <dt><h4>AVの名前</h4></dt>
+                                <dd><h3>{{ av_title }}</h></dd>
                                 <dt>元の名前</dt>
                                 <dd>{{ original_title }}</dd>
-                                <dt>AVの名前</dt>
-                                <dd>{{ av_title }}</dd>
                             </dl>
                             <button type="button" onclick="history.back()" class="back-button">もう一度変換</button>
-                            <a href={{ tweet_url }} class="twitter-share-button" data-show-count="false">Tweet</a>
-                            <!-- <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+                            <a href={{ tweet_url }} class="twitter-share-button" data-url="https://aatgavlove.herokuapp.com" data-show-count="false">Tweet</a>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                         </div>
                     </div>
                 </div>
