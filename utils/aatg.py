@@ -164,7 +164,7 @@ class AATG():
       #単語がアルファベットではない時(SPIとかはだめ)
       if self.alp_check(word["base"]) == False:
         #名詞かつ数字ではないとき
-        if "名詞" in word["pos"] and word["base"][0] not in self.suuzi:
+        if word["pos"] == "名詞" and word["base"][0] not in self.suuzi:
           result = {}
           result["word"] = word["base"]
           result["vowel"] = self.convert_vowels(word["base"])
@@ -305,7 +305,7 @@ class AATG():
     output = ""
     for word in parse_results:
       #名詞<かつ>数字ではない<かつ>アルファベットだけでないもの
-      if "名詞" in word["pos"] and word["base"][0] not in self.suuzi and self.alp_check(word["base"]) == False:
+      if word["pos"] == "名詞" and word["base"][0] not in self.suuzi and self.alp_check(word["base"]) == False:
         output += random.choice(candidates[word["base"]])
       else:
         output += word["surface"]
